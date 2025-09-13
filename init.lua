@@ -104,6 +104,12 @@ vim.o.number = true
 --  Experiment for yourself to see if you like it!
 -- vim.o.relativenumber = true
 
+-- Use spaces, and make a tab equal to 2 spaces
+vim.opt.expandtab    = true   -- convert tabs to spaces
+vim.opt.shiftwidth   = 2      -- `>>` and auto-indent use 2 spaces
+vim.opt.tabstop      = 2      -- a literal Tab character is 2 spaces wide
+vim.opt.softtabstop  = 2      -- number of spaces a Tab feels like when editing
+
 -- Enable mouse mode, can be useful for resizing splits for example!
 vim.o.mouse = 'a'
 
