@@ -105,10 +105,10 @@ vim.o.number = true
 -- vim.o.relativenumber = true
 
 -- Use spaces, and make a tab equal to 2 spaces
-vim.opt.expandtab    = true   -- convert tabs to spaces
-vim.opt.shiftwidth   = 2      -- `>>` and auto-indent use 2 spaces
-vim.opt.tabstop      = 2      -- a literal Tab character is 2 spaces wide
-vim.opt.softtabstop  = 2      -- number of spaces a Tab feels like when editing
+vim.opt.expandtab = true -- convert tabs to spaces
+vim.opt.shiftwidth = 2 -- `>>` and auto-indent use 2 spaces
+vim.opt.tabstop = 2 -- a literal Tab character is 2 spaces wide
+vim.opt.softtabstop = 2 -- number of spaces a Tab feels like when editing
 
 -- Enable mouse mode, can be useful for resizing splits for example!
 vim.o.mouse = 'a'
@@ -178,6 +178,7 @@ vim.o.confirm = true
 -- Clear highlights on search when pressing <Esc> in normal mode
 --  See `:help hlsearch`
 vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
+vim.keymap.set('i', 'jk', '<Esc>', { noremap = true, silent = true })
 
 -- Diagnostic keymaps
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
@@ -666,7 +667,44 @@ require('lazy').setup({
       --  When you add blink.cmp, luasnip, etc. Neovim now has *more* capabilities.
       --  So, we create new capabilities with blink.cmp, and then broadcast that to the servers.
       local capabilities = require('blink.cmp').get_lsp_capabilities()
+      --
+      -- LSP flags: wait 200ms after edits before sending didChange (tuned for "leave insert" UX)
+      local lsp_flags = {
+        debounce_text_changes = 200,
+      }
 
+      -- Immediate but lightweight flush on InsertLeave for C/C++ buffers
+      local _timers = {}
+      vim.api.nvim_create_autocmd('InsertLeave', {
+        pattern = { '*.c', '*.cpp', '*.h', '*.hpp' },
+        callback = function(ev)
+          local bufnr = ev.buf
+          -- debounce per buffer (avoid double-fire)
+          if _timers[bufnr] then
+            _timers[bufnr]:stop()
+            _timers[bufnr]:close()
+            _timers[bufnr] = nil
+          end
+          local timer = vim.loop.new_timer()
+          _timers[bufnr] = timer
+          timer:start(
+            0,
+            0,
+            vim.schedule_wrap(function()
+              local params = vim.lsp.util.make_text_document_params(bufnr)
+              params.contentChanges = { { text = table.concat(vim.api.nvim_buf_get_lines(bufnr, 0, -1, true), '\n') } }
+              for _, client in ipairs(vim.lsp.get_active_clients { bufnr = bufnr }) do
+                if client.supports_method and client.supports_method 'textDocument/didChange' then
+                  client.notify('textDocument/didChange', params)
+                end
+              end
+              _timers[bufnr]:stop()
+              _timers[bufnr]:close()
+              _timers[bufnr] = nil
+            end)
+          )
+        end,
+      })
       -- Enable the following language servers
       --  Feel free to add/remove any LSPs that you want here. They will automatically be installed.
       --
@@ -677,6 +715,40 @@ require('lazy').setup({
       --  - settings (table): Override the default settings passed when initializing the server.
       --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
       local servers = {
+
+        -- add this entry inside the `servers` table (next to lua_ls)
+        clangd = {
+          -- explicit command-line flags. You can tweak these later.
+          cmd = {
+            'clangd',
+            '--background-index',
+            '--clang-tidy',
+            '--completion-style=detailed',
+            '--header-insertion=never',
+            '--query-driver=/nix/store/*-clang-wrapper-*/bin/*',
+            '--log=verbose',
+          },
+          flags = lsp_flags,
+
+          -- filetypes to attach to
+          filetypes = { 'c', 'cpp', 'objc', 'objcpp' },
+
+          -- sensible root detection: prefer compile_commands.json or compile_flags.txt or .git
+          root_dir = function(fname)
+            return require('lspconfig.util').root_pattern('compile_commands.json', 'compile_flags.txt', '.clangd', '.git')(fname) or vim.loop.cwd()
+          end,
+
+          -- Optional: specific clangd settings (workspace/diagnostics etc.)
+          settings = {
+            clangd = {
+              fallbackFlags = { '-std=c++20' }, -- fallback if project doesn't provide flags
+            },
+          },
+
+          -- capabilities will be merged by the handler so we leave `capabilities` nil here
+          -- if you want to override small things you can add a `capabilities = { ... }` field
+        },
+
         -- clangd = {},
         -- gopls = {},
         -- pyright = {},
@@ -719,7 +791,16 @@ require('lazy').setup({
       --
       -- You can add other tools here that you want Mason to install
       -- for you, so that they are available from within Neovim.
-      local ensure_installed = vim.tbl_keys(servers or {})
+      --local ensure_installed = vim.tbl_keys(servers or {})
+
+      -- build a list of servers we *do* want mason-tool-installer to ensure, EXCLUDING clangd
+      local ensure_installed = {}
+      for name, _ in pairs(servers or {}) do
+        if name ~= 'clangd' then
+          table.insert(ensure_installed, name)
+        end
+      end
+
       vim.list_extend(ensure_installed, {
         'stylua', -- Used to format Lua code
       })
@@ -739,6 +820,16 @@ require('lazy').setup({
           end,
         },
       }
+      -- Ensure servers excluded from mason (e.g. clangd) are still registered with lspconfig
+      -- Put this immediately after your require('mason-lspconfig').setup { ... } call.
+      local lspconfig = require 'lspconfig'
+      for name, cfg in pairs(servers or {}) do
+        if name == 'clangd' then
+          -- Merge capabilities the same way the handler would
+          cfg.capabilities = vim.tbl_deep_extend('force', {}, capabilities, cfg.capabilities or {})
+          lspconfig[name].setup(cfg)
+        end
+      end
     end,
   },
 
