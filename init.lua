@@ -676,7 +676,7 @@ require('lazy').setup({
       -- Immediate but lightweight flush on InsertLeave for C/C++ buffers
       local _timers = {}
       vim.api.nvim_create_autocmd('InsertLeave', {
-        pattern = { '*.c', '*.cpp', '*.h', '*.hpp' },
+        pattern = { '*.c', '*.cpp', '*.cu', '*.h', '*.hpp', '*.cuh' },
         callback = function(ev)
           local bufnr = ev.buf
           -- debounce per buffer (avoid double-fire)
@@ -731,7 +731,7 @@ require('lazy').setup({
           flags = lsp_flags,
 
           -- filetypes to attach to
-          filetypes = { 'c', 'cpp', 'objc', 'objcpp' },
+          filetypes = { 'c', 'cpp', 'cu', 'objc', 'objcpp' },
 
           -- sensible root detection: prefer compile_commands.json or compile_flags.txt or .git
           root_dir = function(fname)
