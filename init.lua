@@ -720,13 +720,12 @@ require('lazy').setup({
         clangd = {
           -- explicit command-line flags. You can tweak these later.
           cmd = {
-            'clangd',
+            '/run/current-system/sw/bin/clangd',  -- system-wide Nix-installed clangd
             '--background-index',
             '--clang-tidy',
             '--completion-style=detailed',
             '--header-insertion=never',
             '--query-driver=/nix/store/*-clang-wrapper-*/bin/*',
-            '--log=verbose',
           },
           flags = lsp_flags,
 
@@ -991,7 +990,7 @@ require('lazy').setup({
       -- Load the colorscheme here.
       -- Like many other themes, this one has different styles, and you could load
       -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
-      vim.cmd.colorscheme 'tokyonight-night'
+      vim.cmd.colorscheme 'retrobox'
     end,
   },
 
