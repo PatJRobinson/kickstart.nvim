@@ -720,10 +720,13 @@ require('lazy').setup({
           cmd = { "asm-lsp" },
           filetypes = { "asm", "s", "S", "nasm" },
           root_dir = function(fname)
-            return require("lspconfig.util").root_pattern(".git")(fname)
-                 or vim.loop.cwd(),
+            return require("lspconfig.util").root_pattern(".git")(fname) or vim.loop.cwd()
           end,
-          settings = {},
+          settings = {
+            ["asm-lsp"] = {
+              dialect = "nasm",  -- 🔧 key setting
+            },
+          },
         },
 
         -- add this entry inside the `servers` table (next to lua_ls)
@@ -833,7 +836,7 @@ require('lazy').setup({
       -- Put this immediately after your require('mason-lspconfig').setup { ... } call.
       local lspconfig = require 'lspconfig'
       for name, cfg in pairs(servers or {}) do
-        if name == 'clangd' then
+        if name == 'clangd' or name =='asm_lsp' then
           -- Merge capabilities the same way the handler would
           cfg.capabilities = vim.tbl_deep_extend('force', {}, capabilities, cfg.capabilities or {})
           lspconfig[name].setup(cfg)
