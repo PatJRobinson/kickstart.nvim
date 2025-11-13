@@ -716,6 +716,14 @@ require('lazy').setup({
       --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
       local servers = {
 
+        asm_lsp = {
+          cmd = { "/run/current-system/sw/bin/asm-lsp" },
+          filetypes = { "asm", "s", "S", "nasm" },
+          root_dir = require("lspconfig.util").root_pattern(".git")(fname)
+                     or vim.loop.cwd(),
+          settings = {},
+        },
+
         -- add this entry inside the `servers` table (next to lua_ls)
         clangd = {
           -- explicit command-line flags. You can tweak these later.
@@ -795,7 +803,7 @@ require('lazy').setup({
       -- build a list of servers we *do* want mason-tool-installer to ensure, EXCLUDING clangd
       local ensure_installed = {}
       for name, _ in pairs(servers or {}) do
-        if name ~= 'clangd' then
+        if name ~= 'clangd' and name ~= 'nasm_lsp' then
           table.insert(ensure_installed, name)
         end
       end
