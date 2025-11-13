@@ -803,7 +803,7 @@ require('lazy').setup({
       -- build a list of servers we *do* want mason-tool-installer to ensure, EXCLUDING clangd
       local ensure_installed = {}
       for name, _ in pairs(servers or {}) do
-        if name ~= 'clangd' and name ~= 'nasm_lsp' then
+        if name ~= 'clangd' and name ~= 'asm_lsp' then
           table.insert(ensure_installed, name)
         end
       end
