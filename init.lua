@@ -719,8 +719,8 @@ require('lazy').setup({
         asm_lsp = {
           cmd = { "asm-lsp" },
           filetypes = { "asm", "s", "S", "nasm" },
-          function(fname)
-            root_dir = require("lspconfig.util").root_pattern(".git")(fname)
+          root_dir = function(fname)
+            return require("lspconfig.util").root_pattern(".git")(fname)
                  or vim.loop.cwd(),
           end,
           settings = {},
