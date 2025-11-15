@@ -1123,6 +1123,6 @@ vim.api.nvim_create_user_command("Tv", function()
 end, {})
 
 vim.api.nvim_create_user_command("Th", function()
-  vim.cmd("vs | term")
+  vim.cmd("sp | term")
 end, {})
 
