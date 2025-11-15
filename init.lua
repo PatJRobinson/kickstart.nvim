@@ -490,7 +490,6 @@ require('lazy').setup({
       -- Mason must be loaded before its dependents so we need to set it up here.
       -- NOTE: `opts = {}` is the same as calling `require('mason').setup({})`
       { 'mason-org/mason.nvim', opts = {} },
-      'mason-org/mason-lspconfig.nvim',
       'WhoIsSethDaniel/mason-tool-installer.nvim',
 
       -- Useful status updates for LSP.
@@ -761,14 +760,14 @@ require('lazy').setup({
           -- if you want to override small things you can add a `capabilities = { ... }` field
         },
 
-        nix_ls = {
+        nil_ls = {
           cmd = { 'nil' },
           filetypes = { 'nix' },
           root_dir = function(fname)
             return require('lspconfig.util').root_pattern( 'flake.nix', '.git' )(fname) or vim.loop.cwd()
           end,
 
-        };
+        },
         -- clangd = {},
         -- gopls = {},
         -- pyright = {},
