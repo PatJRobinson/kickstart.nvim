@@ -989,6 +989,10 @@ require('lazy').setup({
         contrast = "hard",
         italic = {
           strings = false,
+          comments = true,
+          operators = true,
+          folds = true,
+          emphasis = true,
         },
       }
 
@@ -1126,3 +1130,5 @@ vim.api.nvim_create_user_command("Th", function()
   vim.cmd("sp | term")
 end, {})
 
+vim.keymap.set("n", "<leader>;", function() vim.cmd("vs | term") end, { silent = true })
+vim.keymap.set("n", "<leader>'", function() vim.cmd("sp | term") end, { silent = true })
