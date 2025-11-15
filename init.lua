@@ -733,7 +733,7 @@ require('lazy').setup({
         clangd = {
           -- explicit command-line flags. You can tweak these later.
           cmd = {
-            '/run/current-system/sw/bin/clangd',  -- system-wide Nix-installed clangd
+            'clangd', -- whatever's on PATH
             '--background-index',
             '--clang-tidy',
             '--completion-style=detailed',
@@ -775,7 +775,7 @@ require('lazy').setup({
         --
 
         lua_ls = {
-          -- cmd = { ... },
+          cmd = { 'lua-language-server' },
           -- filetypes = { ... },
           -- capabilities = {},
           settings = {
@@ -785,6 +785,19 @@ require('lazy').setup({
               },
               -- You can toggle below to ignore Lua_LS's noisy `missing-fields` warnings
               -- diagnostics = { disable = { 'missing-fields' } },
+              --
+              runtime = {
+                version = 'LuaJIT',
+                  path = vim.split(package.path, ';'),
+                },
+              diagnostics = {
+                globals = { 'vim' },
+              },
+              workspace = {
+                library = vim.api.nvim_get_runtime_file("", true),
+                checkThirdParty = false,
+              },
+              telemetry = { enable = false },
             },
           },
         },
@@ -808,7 +821,7 @@ require('lazy').setup({
       -- build a list of servers we *do* want mason-tool-installer to ensure, EXCLUDING clangd
       local ensure_installed = {}
       for name, _ in pairs(servers or {}) do
-        if name ~= 'clangd' and name ~= 'asm_lsp' then
+        if name ~= 'clangd' and name ~= 'asm_lsp' and name ~= 'lua_ls' then
           table.insert(ensure_installed, name)
         end
       end
@@ -836,7 +849,7 @@ require('lazy').setup({
       -- Put this immediately after your require('mason-lspconfig').setup { ... } call.
       local lspconfig = require 'lspconfig'
       for name, cfg in pairs(servers or {}) do
-        if name == 'clangd' or name =='asm_lsp' then
+        if name == 'clangd' or name =='asm_lsp' or name == 'lua_ls' then
           -- Merge capabilities the same way the handler would
           cfg.capabilities = vim.tbl_deep_extend('force', {}, capabilities, cfg.capabilities or {})
           lspconfig[name].setup(cfg)
