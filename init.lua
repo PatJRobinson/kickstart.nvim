@@ -1136,6 +1136,7 @@ vim.keymap.set("n", "<leader>'", function() vim.cmd("sp | term") end, { silent =
 vim.api.nvim_create_autocmd({"InsertEnter"}, {
   pattern = "*",
   callback = function()
+    vim.wo.number = true
     vim.wo.relativenumber = false
   end,
 })
@@ -1144,5 +1145,6 @@ vim.api.nvim_create_autocmd({"InsertLeave"}, {
   pattern = "*",
   callback = function()
     vim.wo.relativenumber = true
+    vim.wo.number = false
   end,
 })
