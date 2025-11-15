@@ -1132,3 +1132,18 @@ end, {})
 
 vim.keymap.set("n", "<leader>;", function() vim.cmd("vs | term") end, { silent = true })
 vim.keymap.set("n", "<leader>'", function() vim.cmd("sp | term") end, { silent = true })
+
+-- Relative in normal mode, absolute in insert mode
+vim.api.nvim_create_autocmd({"InsertEnter"}, {
+  pattern = "*",
+  callback = function()
+    vim.wo.relativenumber = false
+  end,
+})
+
+vim.api.nvim_create_autocmd({"InsertLeave"}, {
+  pattern = "*",
+  callback = function()
+    vim.wo.relativenumber = true
+  end,
+})
