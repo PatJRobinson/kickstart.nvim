@@ -999,7 +999,8 @@ require('lazy').setup({
       -- Like many other themes, this one has different styles, and you could load
       -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
       -- vim.cmd.colorscheme 'retrobox'
-      vim.o.background = "dark" -- or "light" for light mode
+      local dark_mode = vim.env.NVIM_DARK_MODE == "1"
+      vim.o.background = dark_mode and "dark" or "light"
       vim.cmd([[colorscheme gruvbox]])
     end,
   },
