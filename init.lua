@@ -761,6 +761,14 @@ require('lazy').setup({
           -- if you want to override small things you can add a `capabilities = { ... }` field
         },
 
+        nix_ls = {
+          cmd = { 'nil' },
+          filetypes = { 'nix' },
+          root_dir = function(fname)
+            return require('lspconfig.util').root_pattern( 'flake.nix', '.git' )(fname) or vim.loop.cwd()
+          end,
+
+        };
         -- clangd = {},
         -- gopls = {},
         -- pyright = {},
