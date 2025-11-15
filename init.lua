@@ -1117,3 +1117,12 @@ require('lazy').setup({
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
+
+vim.api.nvim_create_user_command("tvs", function()
+  vim.cmd("vs | term")
+end, {})
+
+vim.api.nvim_create_user_command("tsp", function()
+  vim.cmd("sp | term")
+end, {})
+
