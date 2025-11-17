@@ -727,6 +727,14 @@ require('lazy').setup({
           },
         },
 
+        marksman = {
+          cmd = { "marksman", "server" },
+          filetypes = { "md", "markdown", "markdown.mdx" },
+          root_dir = function(fname)
+            return require("lspconfig.util").root_pattern(".git")(fname) or vim.loop.cwd()
+          end,
+        },
+
         -- add this entry inside the `servers` table (next to lua_ls)
         clangd = {
           -- explicit command-line flags. You can tweak these later.
