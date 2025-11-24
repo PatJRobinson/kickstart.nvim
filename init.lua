@@ -123,10 +123,6 @@ vim.schedule(function()
   vim.o.clipboard = 'unnamedplus'
 end)
 
--- Use OSC52 for all clipboard operations (Neovim 0.11+)
-vim.g.clipboard = vim.ui.clipboard.osc52
-vim.opt.clipboard = "unnamedplus"
-
 -- Enable break indent
 vim.o.breakindent = true
 
@@ -258,6 +254,24 @@ rtp:prepend(lazypath)
 require('lazy').setup({
   -- NOTE: Plugins can be added with a link (or for a github repo: 'owner/repo' link).
   'NMAC427/guess-indent.nvim', -- Detect tabstop and shiftwidth automatically
+
+  {
+    "ojroques/nvim-osc52",
+    config = function()
+      require("osc52").setup {}
+
+      -- Automatically copy yanked text using OSC52
+      local function copy(event)
+        if event.operator == "y" and event.regname == "" then
+          require("osc52").copy_register("")
+        end
+      end
+
+      vim.api.nvim_create_autocmd("TextYankPost", {
+        callback = copy,
+      })
+    end,
+  }
 
   -- NOTE: Plugins can also be added by using a table,
   -- with the first argument being the link and the following
