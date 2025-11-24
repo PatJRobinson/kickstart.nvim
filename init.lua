@@ -268,7 +268,9 @@ require('lazy').setup({
       end
 
       vim.api.nvim_create_autocmd("TextYankPost", {
+        group = vim.api.nvim_create_augroup("osc52_yank", { clear = true }),
         callback = copy,
+        priority = 100,
       })
     end,
   },
