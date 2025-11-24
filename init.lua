@@ -791,10 +791,6 @@ require('lazy').setup({
         nil_ls = {
           cmd = { 'nil' },
           filetypes = { 'nix' },
-          root_dir = function(fname)
-            return require('lspconfig.util').root_pattern( 'flake.nix', '.git' )(fname) or vim.loop.cwd()
-          end,
-
         },
         -- clangd = {},
         -- gopls = {},
