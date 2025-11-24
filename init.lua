@@ -839,6 +839,7 @@ require('lazy').setup({
         cfg.capabilities = vim.tbl_deep_extend('force', {}, capabilities, cfg.capabilities or {})
         vim.lsp.config(name, cfg)
       end
+      vim.lsp.enable(vim.tbl_keys(servers))
     end,
   },
 
