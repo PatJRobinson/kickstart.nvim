@@ -838,8 +838,8 @@ require('lazy').setup({
         -- Merge capabilities the same way the handler would
         cfg.capabilities = vim.tbl_deep_extend('force', {}, capabilities, cfg.capabilities or {})
         vim.lsp.config(name, cfg)
+        vim.lsp.enable(name)
       end
-      vim.lsp.enable(vim.tbl_keys(servers))
     end,
   },
 
