@@ -123,6 +123,10 @@ vim.schedule(function()
   vim.o.clipboard = 'unnamedplus'
 end)
 
+-- Use OSC52 for all clipboard operations (Neovim 0.11+)
+vim.g.clipboard = vim.ui.clipboard.osc52
+vim.opt.clipboard = "unnamedplus"
+
 -- Enable break indent
 vim.o.breakindent = true
 
