@@ -257,6 +257,7 @@ require('lazy').setup({
 
   {
     "ojroques/nvim-osc52",
+    lazy = false,
     config = function()
       require("osc52").setup {}
 
@@ -270,7 +271,6 @@ require('lazy').setup({
       vim.api.nvim_create_autocmd("TextYankPost", {
         group = vim.api.nvim_create_augroup("osc52_yank", { clear = true }),
         callback = copy,
-        priority = 100,
       })
     end,
   },
