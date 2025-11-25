@@ -795,7 +795,7 @@ require('lazy').setup({
           settings = {
             ["nil"] = {
               formatting = {
-                command = "alejandra",  -- or "nixfmt"
+                command = {"alejandra"},  -- or "nixfmt"
               },
             },
           },
