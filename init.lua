@@ -791,7 +791,16 @@ require('lazy').setup({
         nil_ls = {
           cmd = { 'nil' },
           filetypes = { 'nix' },
+
+          settings = {
+            ["nil"] = {
+              formatting = {
+                command = "alejandra",  -- or "nixfmt"
+              },
+            },
+          },
         },
+
         -- clangd = {},
         -- gopls = {},
         -- pyright = {},
