@@ -256,6 +256,8 @@ require('lazy').setup({
   -- NOTE: Plugins can be added with a link (or for a github repo: 'owner/repo' link).
   'NMAC427/guess-indent.nvim', -- Detect tabstop and shiftwidth automatically
 
+  'Yohannfra/Nvim-Switch-Buffer',
+
   {
     "ojroques/nvim-osc52",
     lazy = false,
@@ -1166,6 +1168,7 @@ end, {})
 
 vim.keymap.set("n", "<leader>;", function() vim.cmd("vs | term") end, { silent = true })
 vim.keymap.set("n", "<leader>'", function() vim.cmd("sp | term") end, { silent = true })
+vim.keymap.set("n", "<leader>b", function() vim.cmd("SwitchBuffer") end, {silent = true })
 
 -- Relative in normal mode, absolute in insert mode
 vim.api.nvim_create_autocmd({"InsertEnter"}, {
