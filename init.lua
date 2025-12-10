@@ -802,8 +802,15 @@ require('lazy').setup({
         },
 
         yaml_ls = {
-          cmd = { 'yaml-language-server' },
+          cmd = { 'yaml-language-server', "--stdio" },
           filetypes = { 'yaml', 'yml' },
+          settings = {
+            yaml = {
+              validate = true,
+              format = { enable = true },
+              keyOrdering = false,
+            },
+          },
         },
         -- clangd = {},
         -- gopls = {},
