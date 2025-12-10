@@ -812,10 +812,6 @@ require('lazy').setup({
               schemas = {
                 [ "./schema.json" ] = { "*.yaml", "*.yml" },
                 [ "./schema.yaml" ] = { "*.yaml", "*.yml" },
-                schemaStore = {
-                  enable = true,
-                  url = "https://www.schemastore.org/api/json/catalog.json",
-                },
               },
             },
           },
