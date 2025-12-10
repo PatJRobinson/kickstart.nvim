@@ -801,6 +801,10 @@ require('lazy').setup({
           },
         },
 
+        yaml_ls = {
+          cmd = { 'lua-language-server' },
+          filetypes = { 'yaml', 'yml' },
+        },
         -- clangd = {},
         -- gopls = {},
         -- pyright = {},
