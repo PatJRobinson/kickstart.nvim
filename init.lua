@@ -802,7 +802,7 @@ require('lazy').setup({
         },
 
         yaml_ls = {
-          cmd = { 'lua-language-server' },
+          cmd = { 'yaml-language-server' },
           filetypes = { 'yaml', 'yml' },
         },
         -- clangd = {},
