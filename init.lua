@@ -809,6 +809,14 @@ require('lazy').setup({
               validate = true,
               format = { enable = true },
               keyOrdering = false,
+              schemas = {
+                [ "./schema.json" ] = { "*.yaml", "*.yml" },
+                [ "./schema.yaml" ] = { "*.yaml", "*.yml" },
+                schemaStore = {
+                  enable = true,
+                  url = "https://www.schemastore.org/api/json/catalog.json",
+                },
+              },
             },
           },
         },
