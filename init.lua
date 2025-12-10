@@ -1168,8 +1168,8 @@ vim.api.nvim_create_user_command("Th", function()
   vim.cmd("sp | term")
 end, {})
 
-vim.keymap.set("n", "<leader>;", function() vim.cmd("vs | term") end, { silent = true })
-vim.keymap.set("n", "<leader>'", function() vim.cmd("sp | term") end, { silent = true })
+vim.keymap.set("n", "<leader>;", function() vim.cmd("vs | term") end, { silent = true, desc = 'Open terminal to the right' })
+vim.keymap.set("n", "<leader>'", function() vim.cmd("sp | term") end, { silent = true, desc = 'Open terminal below' })
 
 -- Relative in normal mode, absolute in insert mode
 vim.api.nvim_create_autocmd({"InsertEnter"}, {
