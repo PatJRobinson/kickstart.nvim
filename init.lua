@@ -809,9 +809,20 @@ require('lazy').setup({
               validate = true,
               format = { enable = true },
               keyOrdering = false,
-              schemas = {
-                [ "./schema.json" ] = { "*.yaml", "*.yml" },
-                [ "./schema.yaml" ] = { "*.yaml", "*.yml" },
+              schemas = (function()
+                local cwd = vim.fn.getcwd()
+                return {
+                  -- absolute path ensures Nix + LSP resolves correctly
+                  [cwd .. "/schema.yaml"] = {
+                    cwd .. "/*.yaml",
+                    cwd .. "/*.yml",
+                  },
+                  [cwd .. "/schema.json"] = {
+                    cwd .. "/*.yaml",
+                    cwd .. "/*.yml",
+                  },
+                }
+              end)(),
               },
             },
           },
