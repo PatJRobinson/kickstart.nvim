@@ -1176,7 +1176,7 @@ vim.api.nvim_create_user_command("Th", function()
 end, {})
 
 vim.keymap.set("n", "<leader>\\", function() vim.cmd("term") end, { silent = true, desc = 'Open terminal fullscreen' })
-vim.keymap.set("n", "<leader>f\\", function() vim.cmd("term") end, { silent = true, desc = 'Open file explorer fullscreen' })
+vim.keymap.set("n", "<leader>f\\", function() vim.cmd("term yazi") end, { silent = true, desc = 'Open file explorer fullscreen' })
 vim.keymap.set("n", "<leader>;", function() vim.cmd("vs | term") end, { silent = true, desc = 'Open terminal to the right' })
 vim.keymap.set("n", "<leader>f;", function() vim.cmd("vs | term yazi") end, { silent = true, desc = 'Open file explorer to the right' })
 vim.keymap.set("n", "<leader>'", function() vim.cmd("sp | term") end, { silent = true, desc = 'Open terminal below' })
