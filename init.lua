@@ -1175,10 +1175,12 @@ vim.api.nvim_create_user_command("Th", function()
   vim.cmd("sp | term")
 end, {})
 
+vim.keymap.set("n", "<leader>\\", function() vim.cmd("term") end, { silent = true, desc = 'Open terminal fullscreen' })
+vim.keymap.set("n", "<leader>f\\", function() vim.cmd("term") end, { silent = true, desc = 'Open file explorer fullscreen' })
 vim.keymap.set("n", "<leader>;", function() vim.cmd("vs | term") end, { silent = true, desc = 'Open terminal to the right' })
 vim.keymap.set("n", "<leader>f;", function() vim.cmd("vs | term yazi") end, { silent = true, desc = 'Open file explorer to the right' })
 vim.keymap.set("n", "<leader>'", function() vim.cmd("sp | term") end, { silent = true, desc = 'Open terminal below' })
-vim.keymap.set("n", "<leader>f'", function() vim.cmd("vs | term yazi") end, { silent = true, desc = 'Open file explorer below' })
+vim.keymap.set("n", "<leader>f'", function() vim.cmd("sp | term yazi") end, { silent = true, desc = 'Open file explorer below' })
 
 -- Relative in normal mode, absolute in insert mode
 vim.api.nvim_create_autocmd({"InsertEnter"}, {
