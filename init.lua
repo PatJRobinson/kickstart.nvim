@@ -498,6 +498,12 @@ require('lazy').setup({
       ---@type render.md.UserConfig
       opts = {},
   },
+
+  {
+    "dhruvasagar/vim-table-mode",
+    ft = { "markdown" },
+  },
+
   -- LSP Plugins
   {
     -- `lazydev` configures Lua LSP for your Neovim config, runtime and plugins
