@@ -533,6 +533,16 @@ require('lazy').setup({
     end,
   },
 
+  {
+      'MeanderingProgrammer/render-markdown.nvim',
+      dependencies = { 'nvim-treesitter/nvim-treesitter', 'nvim-mini/mini.nvim' },            -- if you use the mini.nvim suite
+      -- dependencies = { 'nvim-treesitter/nvim-treesitter', 'nvim-mini/mini.icons' },        -- if you use standalone mini plugins
+      -- dependencies = { 'nvim-treesitter/nvim-treesitter', 'nvim-tree/nvim-web-devicons' }, -- if you prefer nvim-web-devicons
+      ---@module 'render-markdown'
+      ---@type render.md.UserConfig
+      opts = {},
+  },
+
   -- LSP Plugins
   {
     -- `lazydev` configures Lua LSP for your Neovim config, runtime and plugins
@@ -845,6 +855,17 @@ require('lazy').setup({
           },
         },
 
+        yaml_ls = {
+          cmd = { 'yaml-language-server', "--stdio" },
+          filetypes = { 'yaml', 'yml' },
+          settings = {
+            yaml = {
+              validate = true,
+              format = { enable = true },
+              keyOrdering = false,
+            },
+          },
+        },
         -- clangd = {},
         -- gopls = {},
         -- pyright = {},
@@ -1208,8 +1229,12 @@ vim.api.nvim_create_user_command("Th", function()
   vim.cmd("sp | term")
 end, {})
 
+vim.keymap.set("n", "<leader>\\", function() vim.cmd("term") end, { silent = true, desc = 'Open terminal fullscreen' })
+vim.keymap.set("n", "<leader>f\\", function() vim.cmd("term yazi") end, { silent = true, desc = 'Open file explorer fullscreen' })
 vim.keymap.set("n", "<leader>;", function() vim.cmd("vs | term") end, { silent = true, desc = 'Open terminal to the right' })
+vim.keymap.set("n", "<leader>f;", function() vim.cmd("vs | term yazi") end, { silent = true, desc = 'Open file explorer to the right' })
 vim.keymap.set("n", "<leader>'", function() vim.cmd("sp | term") end, { silent = true, desc = 'Open terminal below' })
+vim.keymap.set("n", "<leader>f'", function() vim.cmd("sp | term yazi") end, { silent = true, desc = 'Open file explorer below' })
 
 -- Relative in normal mode, absolute in insert mode
 vim.api.nvim_create_autocmd({"InsertEnter"}, {
