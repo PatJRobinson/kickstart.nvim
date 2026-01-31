@@ -109,6 +109,10 @@ vim.opt.shiftwidth = 2 -- `>>` and auto-indent use 2 spaces
 vim.opt.tabstop = 2 -- a literal Tab character is 2 spaces wide
 vim.opt.softtabstop = 2 -- number of spaces a Tab feels like when editing
 
+vim.opt.foldmethod = "expr"
+vim.opt.foldexpr = "nvim_treesitter#foldexpr()"
+vim.opt.foldlevel = 99
+
 -- Enable mouse mode, can be useful for resizing splits for example!
 vim.o.mouse = 'a'
 
