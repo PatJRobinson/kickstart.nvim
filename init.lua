@@ -1295,13 +1295,3 @@ vim.api.nvim_create_autocmd({"InsertLeave"}, {
   end,
 })
 
-vim.api.nvim_create_autocmd("VimEnter", {
-  callback = function()
-    if vim.fn.argc() == 0 then
-      -- optional: ensure we don't open on stdin
-      if vim.bo.buftype == "" then
-        vim.cmd("Yazi")
-      end
-    end
-  end,
-})
