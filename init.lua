@@ -827,6 +827,7 @@ require('lazy').setup({
             '--clang-tidy',
             '--completion-style=detailed',
             '--header-insertion=never',
+            '--query-driver=/nix/store/*-gcc-wrapper-*/bin/*,/nix/store/*-clang-wrapper-*/bin/*',
           },
           flags = lsp_flags,
 
