@@ -931,12 +931,10 @@ require('lazy').setup({
 
       -- register lsps with language lspconfig
       -- Put this immediately after your require('mason-lspconfig').setup { ... } call.
+      local lspconfig = require("lspconfig")
       for name, cfg in pairs(servers or {}) do
-        -- Merge capabilities the same way the handler would
-        cfg.capabilities = vim.tbl_deep_extend('force', {}, capabilities, cfg.capabilities or {})
-        cfg.autostart = true
-        vim.lsp.config(name, cfg)
-        vim.lsp.enable(name)
+        cfg.capabilities = vim.tbl_deep_extend("force", {}, capabilities, cfg.capabilities or {})
+        lspconfig[name].setup(cfg)
       end
     end,
   },
