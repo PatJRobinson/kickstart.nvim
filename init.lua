@@ -818,6 +818,7 @@ require('lazy').setup({
         },
 
         -- add this entry inside the `servers` table (next to lua_ls)
+
         clangd = {
           -- explicit command-line flags. You can tweak these later.
           cmd = {
@@ -1258,3 +1259,9 @@ vim.api.nvim_create_autocmd({"InsertLeave"}, {
   end,
 })
 
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = { "c", "cpp", "objc", "objcpp", "cuda" },
+  callback = function()
+    vim.keymap.set("n", "gf", vim.lsp.buf.definition, { buffer = true })
+  end,
+})
