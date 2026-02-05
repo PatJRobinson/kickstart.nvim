@@ -843,6 +843,9 @@ require('lazy').setup({
           settings = {
             clangd = {
               fallbackFlags = { '-std=c++20' }, -- fallback if project doesn't provide flags
+              formatting = {
+                command = {"clang-format"},  -- or "nixfmt"
+              },
             },
           },
 
