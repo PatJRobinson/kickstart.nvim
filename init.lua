@@ -843,11 +843,23 @@ require('lazy').setup({
           settings = {
             clangd = {
               fallbackFlags = { '-std=c++20' }, -- fallback if project doesn't provide flags
-              formatting = {
-                command = {"clang-format"},  -- or "nixfmt"
-              },
             },
           },
+
+          on_attach = function(client, bufnr)
+            -- optional: only use clangd for formatting even if other LSPs attach
+            vim.api.nvim_create_autocmd('BufWritePre', {
+              buffer = bufnr,
+              callback = function()
+                vim.lsp.buf.format {
+                  bufnr = bufnr,
+                  filter = function(c)
+                    return c.name == 'clangd'
+                  end,
+                }
+              end,
+            })
+          end,
 
           -- capabilities will be merged by the handler so we leave `capabilities` nil here
           -- if you want to override small things you can add a `capabilities = { ... }` field
