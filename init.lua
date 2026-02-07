@@ -800,7 +800,9 @@ require('lazy').setup({
           cmd = { "asm-lsp" },
           filetypes = { "asm", "s", "S", "nasm" },
           root_dir = function(fname)
-            return require("lspconfig.util").root_pattern(".git")(fname) or vim.loop.cwd()
+            return vim.fs.root(fname, {
+              '.git',
+            }) or vim.loop.cwd()
           end,
           settings = {
             ["asm-lsp"] = {
@@ -813,7 +815,9 @@ require('lazy').setup({
           cmd = { "marksman", "server" },
           filetypes = { "md", "markdown", "markdown.mdx" },
           root_dir = function(fname)
-            return require("lspconfig.util").root_pattern(".git")(fname) or vim.loop.cwd()
+            return vim.fs.root(fname, {
+              '.git',
+            }) or vim.loop.cwd()
           end,
         },
 
