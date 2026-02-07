@@ -867,7 +867,12 @@ require('lazy').setup({
 
           -- sensible root detection: prefer compile_commands.json or compile_flags.txt or .git
           root_dir = function(fname)
-            return require('lspconfig.util').root_pattern('compile_commands.json', 'compile_flags.txt', '.clangd', '.git')(fname) or vim.loop.cwd()
+            return vim.fs.root(fname, {
+              'compile_commands.json',
+              'compile_flags.txt',
+              '.clangd',
+              '.git',
+            }) or vim.loop.cwd()
           end,
 
           -- Optional: specific clangd settings (workspace/diagnostics etc.)
@@ -894,7 +899,7 @@ require('lazy').setup({
           },
         },
 
-        yaml_ls = {
+        yamlls = {
           cmd = { 'yaml-language-server', "--stdio" },
           filetypes = { 'yaml', 'yml' },
           settings = {
