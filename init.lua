@@ -261,41 +261,6 @@ require('lazy').setup({
   'NMAC427/guess-indent.nvim', -- Detect tabstop and shiftwidth automatically
 
   {
-    "epwalsh/obsidian.nvim",
-    version = "*",  -- recommended, use latest release instead of latest commit
-    lazy = true,
-    ft = "markdown",
-    -- Replace the above line with this if you only want to load obsidian.nvim for markdown files in your vault:
-    -- event = {
-    --   -- If you want to use the home shortcut '~' here you need to call 'vim.fn.expand'.
-    --   -- E.g. "BufReadPre " .. vim.fn.expand "~" .. "/my-vault/*.md"
-    --   -- refer to `:h file-pattern` for more examples
-    --   "BufReadPre path/to/my-vault/*.md",
-    --   "BufNewFile path/to/my-vault/*.md",
-    -- },
-    dependencies = {
-      -- Required.
-      "nvim-lua/plenary.nvim",
-
-      -- see below for full list of optional dependencies 👇
-    },
-    opts = {
-      workspaces = {
-        {
-          name = "personal",
-          path = "~/vaults/personal",
-        },
-        {
-          name = "work",
-          path = "~/vaults/work",
-        },
-      },
-
-      -- see below for full list of options 👇
-    },
-  },
-
-  {
     "mikavilpas/yazi.nvim",
     version = "*", -- use the latest stable version
     event = "VeryLazy",
@@ -572,6 +537,9 @@ require('lazy').setup({
     end,
   },
 
+  {
+    "let-def/texpresso.vim",
+  },
   {
       'MeanderingProgrammer/render-markdown.nvim',
       dependencies = { 'nvim-treesitter/nvim-treesitter', 'nvim-mini/mini.nvim' },            -- if you use the mini.nvim suite
@@ -850,6 +818,7 @@ require('lazy').setup({
         },
 
         -- add this entry inside the `servers` table (next to lua_ls)
+
         clangd = {
           -- explicit command-line flags. You can tweak these later.
           cmd = {
@@ -858,7 +827,7 @@ require('lazy').setup({
             '--clang-tidy',
             '--completion-style=detailed',
             '--header-insertion=never',
-            '--query-driver=/nix/store/*-clang-wrapper-*/bin/*',
+            '--query-driver=/nix/store/*-gcc-wrapper-*/bin/*,/nix/store/*-clang-wrapper-*/bin/*',
           },
           flags = lsp_flags,
 
@@ -881,6 +850,21 @@ require('lazy').setup({
               fallbackFlags = { '-std=c++20' }, -- fallback if project doesn't provide flags
             },
           },
+
+          on_attach = function(client, bufnr)
+            -- optional: only use clangd for formatting even if other LSPs attach
+            vim.api.nvim_create_autocmd('BufWritePre', {
+              buffer = bufnr,
+              callback = function()
+                vim.lsp.buf.format {
+                  bufnr = bufnr,
+                  filter = function(c)
+                    return c.name == 'clangd'
+                  end,
+                }
+              end,
+            })
+          end,
 
           -- capabilities will be merged by the handler so we leave `capabilities` nil here
           -- if you want to override small things you can add a `capabilities = { ... }` field
@@ -969,11 +953,10 @@ require('lazy').setup({
 
       -- register lsps with language lspconfig
       -- Put this immediately after your require('mason-lspconfig').setup { ... } call.
+      local lspconfig = require("lspconfig")
       for name, cfg in pairs(servers or {}) do
-        -- Merge capabilities the same way the handler would
-        cfg.capabilities = vim.tbl_deep_extend('force', {}, capabilities, cfg.capabilities or {})
-        vim.lsp.config(name, cfg)
-        vim.lsp.enable(name)
+        cfg.capabilities = vim.tbl_deep_extend("force", {}, capabilities, cfg.capabilities or {})
+        lspconfig[name].setup(cfg)
       end
     end,
   },
@@ -1294,5 +1277,12 @@ vim.api.nvim_create_autocmd({"InsertLeave"}, {
   callback = function()
     vim.wo.relativenumber = true
     vim.wo.number = false
+  end,
+})
+
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = { "c", "cpp", "objc", "objcpp", "cuda" },
+  callback = function()
+    vim.keymap.set("n", "gf", vim.lsp.buf.definition, { buffer = true })
   end,
 })
