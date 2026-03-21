@@ -1170,11 +1170,39 @@ require('lazy').setup({
     build = ':TSUpdate',
     config = function()
       require('nvim-treesitter').setup({
-        -- new-style options here
+        install_dir = vim.fn.stdpath('data') .. '/site',
+      })
+
+      require('nvim-treesitter').install({
+        'bash',
+        'c',
+        'diff',
+        'html',
+        'lua',
+        'luadoc',
+        'markdown',
+        'markdown_inline',
+        'query',
+        'vim',
+        'vimdoc',
+      })
+
+      vim.api.nvim_create_autocmd('FileType', {
+        pattern = {
+          'bash',
+          'c',
+          'html',
+          'lua',
+          'markdown',
+          'query',
+          'vim',
+        },
+        callback = function(args)
+          vim.treesitter.start(args.buf)
+        end,
       })
     end,
-  },
-
+  }
   -- The following comments only work if you have downloaded the kickstart repo, not just copy pasted the
   -- init.lua. If you want these files, they are in the repository, so you can just download them and
   -- place them in the correct locations.
