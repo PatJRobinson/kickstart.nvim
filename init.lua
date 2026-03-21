@@ -799,11 +799,7 @@ require('lazy').setup({
         asm_lsp = {
           cmd = { "asm-lsp" },
           filetypes = { "asm", "s", "S", "nasm" },
-          root_dir = function(fname)
-            return vim.fs.root(fname, {
-              '.git',
-            }) or vim.loop.cwd()
-          end,
+          root_markers = { ".git" },
           settings = {
             ["asm-lsp"] = {
               dialect = "nasm", -- 🔧 key setting
@@ -814,11 +810,7 @@ require('lazy').setup({
         marksman = {
           cmd = { "marksman", "server" },
           filetypes = { "md", "markdown", "markdown.mdx" },
-          root_dir = function(fname)
-            return vim.fs.root(fname, {
-              '.git',
-            }) or vim.loop.cwd()
-          end,
+          root_markers = { ".git" },
         },
 
         -- add this entry inside the `servers` table (next to lua_ls)
@@ -837,16 +829,14 @@ require('lazy').setup({
 
           -- filetypes to attach to
           filetypes = { 'c', 'cpp', 'cu', 'objc', 'objcpp' },
-
+          --
           -- sensible root detection: prefer compile_commands.json or compile_flags.txt or .git
-          root_dir = function(fname)
-            return vim.fs.root(fname, {
-              'compile_commands.json',
-              'compile_flags.txt',
-              '.clangd',
-              '.git',
-            }) or vim.loop.cwd()
-          end,
+          root_markers = {
+            'compile_commands.json',
+            'compile_flags.txt',
+            '.clangd',
+            '.git',
+          },
 
           -- Optional: specific clangd settings (workspace/diagnostics etc.)
           settings = {
