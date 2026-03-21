@@ -105,9 +105,9 @@ vim.o.relativenumber = true
 
 -- Use spaces, and make a tab equal to 2 spaces
 vim.opt.expandtab = true -- convert tabs to spaces
-vim.opt.shiftwidth = 2 -- `>>` and auto-indent use 2 spaces
-vim.opt.tabstop = 2 -- a literal Tab character is 2 spaces wide
-vim.opt.softtabstop = 2 -- number of spaces a Tab feels like when editing
+vim.opt.shiftwidth = 2   -- `>>` and auto-indent use 2 spaces
+vim.opt.tabstop = 2      -- a literal Tab character is 2 spaces wide
+vim.opt.softtabstop = 2  -- number of spaces a Tab feels like when editing
 
 vim.opt.foldmethod = "expr"
 vim.opt.foldexpr = "nvim_treesitter#foldexpr()"
@@ -226,7 +226,7 @@ vim.api.nvim_create_autocmd('TextYankPost', {
   group = vim.api.nvim_create_augroup('kickstart-highlight-yank', { clear = true }),
   callback = function()
     vim.hl.on_yank()
-      require("osc52").copy_register("")
+    require("osc52").copy_register("")
   end,
 })
 
@@ -373,7 +373,7 @@ require('lazy').setup({
   -- Then, because we use the `opts` key (recommended), the configuration runs
   -- after the plugin has been loaded as `require(MODULE).setup(opts)`.
 
-  { -- Useful plugin to show you pending keybinds.
+  {                     -- Useful plugin to show you pending keybinds.
     'folke/which-key.nvim',
     event = 'VimEnter', -- Sets the loading event to 'VimEnter'
     opts = {
@@ -454,7 +454,7 @@ require('lazy').setup({
       { 'nvim-telescope/telescope-ui-select.nvim' },
 
       -- Useful for getting pretty icons, but requires a Nerd Font.
-      { 'nvim-tree/nvim-web-devicons', enabled = vim.g.have_nerd_font },
+      { 'nvim-tree/nvim-web-devicons',            enabled = vim.g.have_nerd_font },
     },
     config = function()
       -- Telescope is a fuzzy finder that comes with a lot of different things that
@@ -541,13 +541,13 @@ require('lazy').setup({
     "let-def/texpresso.vim",
   },
   {
-      'MeanderingProgrammer/render-markdown.nvim',
-      dependencies = { 'nvim-treesitter/nvim-treesitter', 'nvim-mini/mini.nvim' },            -- if you use the mini.nvim suite
-      -- dependencies = { 'nvim-treesitter/nvim-treesitter', 'nvim-mini/mini.icons' },        -- if you use standalone mini plugins
-      -- dependencies = { 'nvim-treesitter/nvim-treesitter', 'nvim-tree/nvim-web-devicons' }, -- if you prefer nvim-web-devicons
-      ---@module 'render-markdown'
-      ---@type render.md.UserConfig
-      opts = {},
+    'MeanderingProgrammer/render-markdown.nvim',
+    dependencies = { 'nvim-treesitter/nvim-treesitter', 'nvim-mini/mini.nvim' }, -- if you use the mini.nvim suite
+    -- dependencies = { 'nvim-treesitter/nvim-treesitter', 'nvim-mini/mini.icons' },        -- if you use standalone mini plugins
+    -- dependencies = { 'nvim-treesitter/nvim-treesitter', 'nvim-tree/nvim-web-devicons' }, -- if you prefer nvim-web-devicons
+    ---@module 'render-markdown'
+    ---@type render.md.UserConfig
+    opts = {},
   },
 
   -- LSP Plugins
@@ -574,7 +574,7 @@ require('lazy').setup({
       'WhoIsSethDaniel/mason-tool-installer.nvim',
 
       -- Useful status updates for LSP.
-      { 'j-hui/fidget.nvim', opts = {} },
+      { 'j-hui/fidget.nvim',    opts = {} },
 
       -- Allows extra capabilities provided by blink.cmp
       'saghen/blink.cmp',
@@ -806,7 +806,7 @@ require('lazy').setup({
           end,
           settings = {
             ["asm-lsp"] = {
-              dialect = "nasm",  -- 🔧 key setting
+              dialect = "nasm", -- 🔧 key setting
             },
           },
         },
@@ -881,7 +881,7 @@ require('lazy').setup({
           settings = {
             ["nil"] = {
               formatting = {
-                command = {"alejandra"},  -- or "nixfmt"
+                command = { "alejandra" }, -- or "nixfmt"
               },
             },
           },
@@ -925,8 +925,8 @@ require('lazy').setup({
               --
               runtime = {
                 version = 'LuaJIT',
-                  path = vim.split(package.path, ';'),
-                },
+                path = vim.split(package.path, ';'),
+              },
               diagnostics = {
                 globals = { 'vim' },
               },
@@ -957,10 +957,10 @@ require('lazy').setup({
 
       -- register lsps with language lspconfig
       -- Put this immediately after your require('mason-lspconfig').setup { ... } call.
-      local lspconfig = require("lspconfig")
       for name, cfg in pairs(servers or {}) do
         cfg.capabilities = vim.tbl_deep_extend("force", {}, capabilities, cfg.capabilities or {})
-        vim.lsp.config[name] = cfg
+        vim.lsp.config(name, cfg)
+        vim.lsp.enable(name)
       end
     end,
   },
@@ -1261,14 +1261,18 @@ vim.api.nvim_create_user_command("Th", function()
 end, {})
 
 vim.keymap.set("n", "<leader>\\", function() vim.cmd("term") end, { silent = true, desc = 'Open terminal fullscreen' })
-vim.keymap.set("n", "<leader>f\\", function() vim.cmd("term yazi") end, { silent = true, desc = 'Open file explorer fullscreen' })
-vim.keymap.set("n", "<leader>;", function() vim.cmd("vs | term") end, { silent = true, desc = 'Open terminal to the right' })
-vim.keymap.set("n", "<leader>f;", function() vim.cmd("vs | term yazi") end, { silent = true, desc = 'Open file explorer to the right' })
+vim.keymap.set("n", "<leader>f\\", function() vim.cmd("term yazi") end,
+  { silent = true, desc = 'Open file explorer fullscreen' })
+vim.keymap.set("n", "<leader>;", function() vim.cmd("vs | term") end,
+  { silent = true, desc = 'Open terminal to the right' })
+vim.keymap.set("n", "<leader>f;", function() vim.cmd("vs | term yazi") end,
+  { silent = true, desc = 'Open file explorer to the right' })
 vim.keymap.set("n", "<leader>'", function() vim.cmd("sp | term") end, { silent = true, desc = 'Open terminal below' })
-vim.keymap.set("n", "<leader>f'", function() vim.cmd("sp | term yazi") end, { silent = true, desc = 'Open file explorer below' })
+vim.keymap.set("n", "<leader>f'", function() vim.cmd("sp | term yazi") end,
+  { silent = true, desc = 'Open file explorer below' })
 
 -- Relative in normal mode, absolute in insert mode
-vim.api.nvim_create_autocmd({"InsertEnter"}, {
+vim.api.nvim_create_autocmd({ "InsertEnter" }, {
   pattern = "*",
   callback = function()
     vim.wo.number = true
@@ -1276,7 +1280,7 @@ vim.api.nvim_create_autocmd({"InsertEnter"}, {
   end,
 })
 
-vim.api.nvim_create_autocmd({"InsertLeave"}, {
+vim.api.nvim_create_autocmd({ "InsertLeave" }, {
   pattern = "*",
   callback = function()
     vim.wo.relativenumber = true
