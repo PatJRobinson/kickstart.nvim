@@ -550,6 +550,9 @@ require('lazy').setup({
     opts = {},
   },
 
+  {
+    "jbyuki/venn.nvim",
+  },
   -- LSP Plugins
   {
     -- `lazydev` configures Lua LSP for your Neovim config, runtime and plugins
