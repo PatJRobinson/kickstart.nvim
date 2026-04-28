@@ -551,6 +551,15 @@ require('lazy').setup({
   },
 
   {
+    "stevearc/aerial.nvim",
+    opts = {},
+    dependencies = {
+      "nvim-treesitter/nvim-treesitter",
+      "nvim-tree/nvim-web-devicons"
+    },
+  },
+
+  {
     "nvim-treesitter/nvim-treesitter-context",
     dependencies = { "nvim-treesitter/nvim-treesitter" },
     config = function()
@@ -1259,6 +1268,8 @@ vim.keymap.set("n", "<leader>f;", function() vim.cmd("vs | term yazi") end,
 vim.keymap.set("n", "<leader>'", function() vim.cmd("sp | term") end, { silent = true, desc = 'Open terminal below' })
 vim.keymap.set("n", "<leader>f'", function() vim.cmd("sp | term yazi") end,
   { silent = true, desc = 'Open file explorer below' })
+
+vim.keymap.set("n", "<leader>a", "<cmd>AerialToggle!<CR>")
 
 -- Relative in normal mode, absolute in insert mode
 vim.api.nvim_create_autocmd({ "InsertEnter" }, {
