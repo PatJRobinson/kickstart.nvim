@@ -551,6 +551,18 @@ require('lazy').setup({
   },
 
   {
+    "nvim-treesitter/nvim-treesitter-context",
+    dependencies = { "nvim-treesitter/nvim-treesitter" },
+    config = function()
+      require("treesitter-context").setup({
+        enable = true,
+        max_lines = 3, -- how many context lines to show
+        trim_scope = "outer",
+      })
+    end
+  },
+
+  {
     "jbyuki/venn.nvim",
   },
   -- LSP Plugins
