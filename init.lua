@@ -544,7 +544,7 @@ require('lazy').setup({
     "brianhuster/live-preview.nvim",
     config = function()
       require("livepreview.config").set({
-        browser = "firefox",
+        browser = "qutebrowser",
         sync_scroll = true,
       })
     end,
