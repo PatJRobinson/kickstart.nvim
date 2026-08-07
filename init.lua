@@ -541,23 +541,6 @@ require('lazy').setup({
     "let-def/texpresso.vim",
   },
   {
-    "toppair/peek.nvim",
-    build = "deno task --quiet build:fast",
-    ft = "markdown",
-    config = function()
-      require("peek").setup({
-        app = "webview",
-        update_on_change = true,
-      })
-
-      vim.api.nvim_create_user_command(
-        "PeekOpen",
-        require("peek").open,
-        {}
-      )
-    end,
-  },
-  {
     'MeanderingProgrammer/render-markdown.nvim',
     dependencies = { 'nvim-treesitter/nvim-treesitter', 'nvim-mini/mini.nvim' }, -- if you use the mini.nvim suite
     -- dependencies = { 'nvim-treesitter/nvim-treesitter', 'nvim-mini/mini.icons' },        -- if you use standalone mini plugins
