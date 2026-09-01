@@ -1304,6 +1304,15 @@ vim.api.nvim_create_autocmd("FileType", {
   end,
 })
 
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "markdown",
+  callback = function()
+    vim.opt_local.wrap = true
+    vim.opt_local.linebreak = true
+    vim.opt_local.breakindent = true
+  end,
+})
+
 -- venn.nvim: enable or disable keymappings
 function _G.Toggle_venn()
   local venn_enabled = vim.inspect(vim.b.venn_enabled)
