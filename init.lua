@@ -1170,7 +1170,24 @@ require('lazy').setup({
       --  - va)  - [V]isually select [A]round [)]paren
       --  - yinq - [Y]ank [I]nside [N]ext [Q]uote
       --  - ci'  - [C]hange [I]nside [']quote
-      require('mini.ai').setup { n_lines = 500 }
+      local ai = require('mini.ai')
+
+      vim.treesitter.query.set('markdown', 'textobjects', [[
+      ;; extends
+      (fenced_code_block
+        (code_fence_content) @codeblock.inner) @codeblock.outer
+      ]])
+
+      ai.setup {
+        n_lines = 500,
+
+        custom_textobjects = {
+          c = ai.gen_spec.treesitter {
+            a = '@codeblock.outer',
+            i = '@codeblock.inner',
+          },
+        },
+      }
 
       -- Add/delete/replace surroundings (brackets, quotes, etc.)
       --
