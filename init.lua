@@ -541,6 +541,15 @@ require('lazy').setup({
     "let-def/texpresso.vim",
   },
   {
+    "brianhuster/live-preview.nvim",
+    config = function()
+      require("livepreview.config").set({
+        browser = "qutebrowser",
+        sync_scroll = true,
+      })
+    end,
+  },
+  {
     'MeanderingProgrammer/render-markdown.nvim',
     dependencies = { 'nvim-treesitter/nvim-treesitter', 'nvim-mini/mini.nvim' }, -- if you use the mini.nvim suite
     -- dependencies = { 'nvim-treesitter/nvim-treesitter', 'nvim-mini/mini.icons' },        -- if you use standalone mini plugins
@@ -550,6 +559,30 @@ require('lazy').setup({
     opts = {},
   },
 
+  {
+    "stevearc/aerial.nvim",
+    opts = {},
+    dependencies = {
+      "nvim-treesitter/nvim-treesitter",
+      "nvim-tree/nvim-web-devicons"
+    },
+  },
+
+  {
+    "nvim-treesitter/nvim-treesitter-context",
+    dependencies = { "nvim-treesitter/nvim-treesitter" },
+    config = function()
+      require("treesitter-context").setup({
+        enable = true,
+        max_lines = 3, -- how many context lines to show
+        trim_scope = "outer",
+      })
+    end
+  },
+
+  {
+    "jbyuki/venn.nvim",
+  },
   -- LSP Plugins
   {
     -- `lazydev` configures Lua LSP for your Neovim config, runtime and plugins
@@ -1138,7 +1171,24 @@ require('lazy').setup({
       --  - va)  - [V]isually select [A]round [)]paren
       --  - yinq - [Y]ank [I]nside [N]ext [Q]uote
       --  - ci'  - [C]hange [I]nside [']quote
-      require('mini.ai').setup { n_lines = 500 }
+      local ai = require('mini.ai')
+
+      vim.treesitter.query.set('markdown', 'textobjects', [[
+      ;; extends
+      (fenced_code_block
+        (code_fence_content) @codeblock.inner) @codeblock.outer
+      ]])
+
+      ai.setup {
+        n_lines = 500,
+
+        custom_textobjects = {
+          c = ai.gen_spec.treesitter {
+            a = '@codeblock.outer',
+            i = '@codeblock.inner',
+          },
+        },
+      }
 
       -- Add/delete/replace surroundings (brackets, quotes, etc.)
       --
@@ -1246,6 +1296,8 @@ vim.keymap.set("n", "<leader>'", function() vim.cmd("sp | term") end, { silent =
 vim.keymap.set("n", "<leader>f'", function() vim.cmd("sp | term yazi") end,
   { silent = true, desc = 'Open file explorer below' })
 
+vim.keymap.set("n", "<leader>a", "<cmd>AerialToggle!<CR>")
+
 -- Relative in normal mode, absolute in insert mode
 vim.api.nvim_create_autocmd({ "InsertEnter" }, {
   pattern = "*",
@@ -1269,3 +1321,39 @@ vim.api.nvim_create_autocmd("FileType", {
     vim.keymap.set("n", "gf", vim.lsp.buf.definition, { buffer = true })
   end,
 })
+
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "markdown",
+  callback = function()
+    vim.opt_local.wrap = true
+    vim.opt_local.linebreak = true
+    vim.opt_local.breakindent = true
+  end,
+})
+
+-- venn.nvim: enable or disable keymappings
+function _G.Toggle_venn()
+  local venn_enabled = vim.inspect(vim.b.venn_enabled)
+  if venn_enabled == "nil" then
+    vim.b.venn_enabled = true
+    vim.cmd [[setlocal ve=all]]
+    -- draw a line on HJKL keystokes
+    vim.api.nvim_buf_set_keymap(0, "n", "J", "<C-v>j:VBox<CR>", { noremap = true })
+    vim.api.nvim_buf_set_keymap(0, "n", "K", "<C-v>k:VBox<CR>", { noremap = true })
+    vim.api.nvim_buf_set_keymap(0, "n", "L", "<C-v>l:VBox<CR>", { noremap = true })
+    vim.api.nvim_buf_set_keymap(0, "n", "H", "<C-v>h:VBox<CR>", { noremap = true })
+    -- draw a box by pressing "f" with visual selection
+    vim.api.nvim_buf_set_keymap(0, "v", "f", ":VBox<CR>", { noremap = true })
+  else
+    vim.cmd [[setlocal ve=]]
+    vim.api.nvim_buf_del_keymap(0, "n", "J")
+    vim.api.nvim_buf_del_keymap(0, "n", "K")
+    vim.api.nvim_buf_del_keymap(0, "n", "L")
+    vim.api.nvim_buf_del_keymap(0, "n", "H")
+    vim.api.nvim_buf_del_keymap(0, "v", "f")
+    vim.b.venn_enabled = nil
+  end
+end
+
+-- toggle keymappings for venn using <leader>v
+vim.api.nvim_set_keymap('n', '<leader>v', ":lua Toggle_venn()<CR>", { noremap = true })
