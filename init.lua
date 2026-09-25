@@ -1121,7 +1121,8 @@ require('lazy').setup({
       -- vim.cmd.colorscheme 'retrobox'
       local dark_mode = vim.env.NVIM_DARK_MODE == "1"
       vim.o.background = dark_mode and "dark" or "light"
-      vim.cmd([[colorscheme gruvbox]])
+      local colorscheme = vim.env.NVIM_COLOURSCHEME or "gruvbox"
+      vim.cmd.colorscheme(colorscheme)
     end,
   },
 
